@@ -50,6 +50,8 @@ model Subscription {
   plan           String
   status         String
   currentPeriodEnd DateTime
-  userId         String
+  userId         String   @unique 
   user           User     @relation(fields: [userId], references: [id])
 }
+
+
