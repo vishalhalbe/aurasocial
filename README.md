@@ -1,5 +1,19 @@
 # AuraSocial
 
+## Backend
+
+The `backend/` directory contains the Express API.
+
+To set up and run the server locally:
+
+```
+cp backend/.env.example backend/.env    # populate variables for database, OAuth, etc.
+cd backend
+npm install
+npx prisma migrate dev
+npm run dev
+```
+
 ## Frontend
 
 The `frontend/` directory contains a basic Next.js application that provides pages for:
