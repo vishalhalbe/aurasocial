@@ -1,3 +1,4 @@
+// Social platform OAuth routes
 import { Router } from 'express';
 import axios from 'axios';
 import prisma from '../config/db.js';
