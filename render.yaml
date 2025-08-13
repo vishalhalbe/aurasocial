@@ -6,7 +6,7 @@ services:
     name: backend
     env: node
     rootDir: backend
-    buildCommand: npm install
+    buildCommand: npm install && npm test
     startCommand: npm start
     envVars:
       - key: DATABASE_URL
