@@ -1,3 +1,4 @@
+// Onboarding routes
 import { Router } from 'express';
 
 const router = Router();
