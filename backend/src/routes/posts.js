@@ -8,7 +8,8 @@ const router = Router();
 
 // Schedule a post
 router.post('/schedule', async (req, res) => {
-  const { userId, content, mediaUrl, scheduledFor, platform } = req.body;
+  const { content, mediaUrl, scheduledFor, platform } = req.body;
+  const userId = req.user.id;
   try {
     const post = await prisma.scheduledPost.create({
       data: {

@@ -9,6 +9,7 @@ import socialRoutes from "./src/routes/social.js";
 import postRoutes from "./src/routes/posts.js";
 import subscriptionRoutes from "./src/routes/subscriptions.js";
 import onboardingRoutes from "./src/routes/onboarding.js";
+import authMiddleware from "./src/middleware/auth.js";
 import "./src/queue/postWorker.js";
 import { initRealtime } from "./src/realtime.js";
 
@@ -30,8 +31,8 @@ app.use(express.urlencoded({ extended: false }));
 
 // API Routes
 app.use("/api/auth", authRoutes);
-app.use("/api/social", socialRoutes);
-app.use("/api/posts", postRoutes);
+app.use("/api/social", authMiddleware, socialRoutes);
+app.use("/api/posts", authMiddleware, postRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/onboarding", onboardingRoutes);
 

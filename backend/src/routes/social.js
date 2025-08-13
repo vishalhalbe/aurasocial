@@ -1,7 +1,9 @@
 // Social platform OAuth routes
 import { Router } from 'express';
 import axios from 'axios';
+import crypto from 'crypto';
 import prisma from '../config/db.js';
+import { setState, getState, deleteState } from '../config/stateStore.js';
 
 const router = Router();
 
@@ -33,16 +35,20 @@ const oauthConfig = {
 };
 
 // Step 1: generate authorization URL
-router.get('/:platform/oauth', (req, res) => {
+router.get('/:platform/oauth', async (req, res) => {
   const { platform } = req.params;
   const config = oauthConfig[platform];
   if (!config) return res.status(400).json({ error: 'Unsupported platform' });
+
+  const state = crypto.randomBytes(16).toString('hex');
+  await setState(state, req.user.id, 300);
 
   const params = new URLSearchParams({
     client_id: config.clientId,
     redirect_uri: config.redirectUri,
     response_type: 'code',
     scope: config.scope,
+    state,
   });
 
   res.json({ url: `${config.authUrl}?${params.toString()}` });
@@ -51,11 +57,18 @@ router.get('/:platform/oauth', (req, res) => {
 // Step 2: handle OAuth callback and persist tokens
 router.get('/:platform/callback', async (req, res) => {
   const { platform } = req.params;
-  const { code, state, userId } = req.query;
+  const { code, state } = req.query;
   const config = oauthConfig[platform];
   if (!config) return res.status(400).json({ error: 'Unsupported platform' });
 
   try {
+    const storedUserId = await getState(state);
+    if (!storedUserId || storedUserId !== String(req.user.id)) {
+      return res.status(400).json({ error: 'Invalid state' });
+    }
+    await deleteState(state);
+    const userId = req.user.id;
+
     const body = new URLSearchParams({
       client_id: config.clientId,
       client_secret: config.clientSecret,
