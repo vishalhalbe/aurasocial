@@ -5,11 +5,17 @@ export default function Schedule() {
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("token") : null;
+
     // Initial load
     const load = async () => {
       try {
         const res = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || ""}/api/posts/schedule`
+          `${process.env.NEXT_PUBLIC_API_URL || ""}/api/posts/schedule`,
+          {
+            headers: token ? { Authorization: `Bearer ${token}` } : {},
+          }
         );
         const data = await res.json();
         if (Array.isArray(data)) setPosts(data);
@@ -22,6 +28,7 @@ export default function Schedule() {
     // Socket updates
     const socket = io(process.env.NEXT_PUBLIC_API_URL || "", {
       transports: ["websocket"],
+      auth: token ? { token } : undefined,
     });
     socket.on("schedule:update", (post) => {
       setPosts((p) => [...p, post]);

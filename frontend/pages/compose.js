@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const platforms = ["twitter", "facebook", "instagram"];
 
@@ -7,17 +7,34 @@ export default function Compose() {
   const [platform, setPlatform] = useState(platforms[0]);
   const [scheduledFor, setScheduledFor] = useState("");
   const [status, setStatus] = useState(null);
+  const [token, setToken] = useState(null);
+  const [userId, setUserId] = useState(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setToken(localStorage.getItem("token"));
+      setUserId(localStorage.getItem("userId"));
+    }
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
+      if (!token || !userId) {
+        setStatus("Not authenticated");
+        return;
+      }
+
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL || ""}/api/posts/schedule`,
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
           body: JSON.stringify({
-            userId: 1,
+            userId,
             content,
             platform,
             scheduledFor,
