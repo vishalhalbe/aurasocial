@@ -9,6 +9,7 @@ import socialRoutes from "./src/routes/social.js";
 import postRoutes from "./src/routes/posts.js";
 import subscriptionRoutes from "./src/routes/subscriptions.js";
 import onboardingRoutes from "./src/routes/onboarding.js";
+import aiRoutes from "./src/routes/ai.js";
 import "./src/queue/postWorker.js";
 import { initRealtime } from "./src/realtime.js";
 
@@ -34,6 +35,7 @@ app.use("/api/social", socialRoutes);
 app.use("/api/posts", postRoutes);
 app.use("/api/subscriptions", subscriptionRoutes);
 app.use("/api/onboarding", onboardingRoutes);
+app.use("/api/ai", aiRoutes);
 
 // Health check
 app.get("/", (req, res) => {
