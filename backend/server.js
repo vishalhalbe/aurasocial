@@ -11,6 +11,7 @@ import postRoutes from "./src/routes/posts.js";
 import subscriptionRoutes from "./src/routes/subscriptions.js";
 import onboardingRoutes from "./src/routes/onboarding.js";
 import "./src/queue/postWorker.js";
+import { initRealtime } from "./src/realtime.js";
 
 dotenv.config();
 
@@ -21,6 +22,7 @@ const io = new SocketIO(server, {
     origin: "*",
   },
 });
+initRealtime(io);
 
 // Middleware
 app.use(cors());
