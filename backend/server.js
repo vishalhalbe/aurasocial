@@ -1,7 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
-import bodyParser from "body-parser";
 import { createServer } from "http";
 import { Server as SocketIO } from "socket.io";
 import prisma from "./src/config/db.js";
@@ -26,7 +25,8 @@ initRealtime(io);
 
 // Middleware
 app.use(cors());
-app.use(bodyParser.json());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
 // API Routes
 app.use("/api/auth", authRoutes);
