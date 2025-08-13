@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import prisma from '../config/db.js';
 import { postQueue } from '../queue/postWorker.js';
+import { emitScheduleUpdate } from '../realtime.js';
 
 const router = Router();
 
@@ -22,6 +23,7 @@ router.post('/schedule', async (req, res) => {
     const delay = new Date(scheduledFor).getTime() - Date.now();
     await postQueue.add('post', { postId: post.id }, { delay: Math.max(delay, 0) });
 
+    emitScheduleUpdate(post);
     res.json(post);
   } catch (err) {
     console.error('Schedule post failed', err);
