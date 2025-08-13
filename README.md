@@ -1,5 +1,15 @@
 # AuraSocial
 
+## Backend
+
+The backend relies on several environment variables for the database, Stripe, Redis and OAuth credentials. An example configuration is provided at `backend/.env.example`.
+
+Copy it to `.env` and supply real values before running the server:
+
+```
+cp backend/.env.example backend/.env
+```
+
 ## Frontend
 
 The `frontend/` directory contains a basic Next.js application that provides pages for:
