@@ -3,6 +3,7 @@ import { Router } from 'express';
 import prisma from '../config/db.js';
 import { postQueue } from '../queue/postWorker.js';
 import { emitScheduleUpdate } from '../realtime.js';
+import auth from '../middleware/auth.js';
 
 const router = Router();
 
@@ -28,6 +29,20 @@ router.post('/schedule', async (req, res) => {
   } catch (err) {
     console.error('Schedule post failed', err);
     res.status(500).json({ error: 'Failed to schedule post' });
+  }
+});
+
+// Retrieve scheduled posts for authenticated user
+router.get('/schedule', auth, async (req, res) => {
+  try {
+    const posts = await prisma.scheduledPost.findMany({
+      where: { userId: req.user.id },
+      orderBy: { scheduledFor: 'asc' },
+    });
+    res.json(posts);
+  } catch (err) {
+    console.error('Fetch scheduled posts failed', err);
+    res.status(500).json({ error: 'Failed to fetch scheduled posts' });
   }
 });
 
