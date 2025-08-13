@@ -1,7 +1,7 @@
 // Post scheduling routes
 import { Router } from 'express';
 import prisma from '../config/db.js';
-import { postQueue } from '../queue/postWorker.js';
+import { postQueue } from '../queues/postWorker.js';
 import { emitScheduleUpdate } from '../realtime.js';
 
 const router = Router();
