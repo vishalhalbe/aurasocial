@@ -10,6 +10,7 @@ import socialRoutes from "./src/routes/social.js";
 import postRoutes from "./src/routes/posts.js";
 import subscriptionRoutes from "./src/routes/subscriptions.js";
 import onboardingRoutes from "./src/routes/onboarding.js";
+import "./src/queue/postWorker.js";
 
 dotenv.config();
 
